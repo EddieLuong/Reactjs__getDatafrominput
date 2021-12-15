@@ -1,52 +1,63 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
 function App() {
   const [userName, setUserName] = useState("");
   const [password, setPassword] = useState("");
-  const [user, setUser] = useState();
   const [checked, setChecked] = useState();
   const [checkbox, setCheckbox] = useState([]);
+  const [user, setUser] = useState();
 
   const courses = [
     {
-      name: "html,css",
+      name: "HTML,CSS",
       id: 1,
       coin: 50,
     },
     {
-      name: "Responsive",
+      name: "Javascript",
       id: 2,
       coin: 100,
     },
     {
-      name: "Javascript",
+      name: "ReactJs",
       id: 3,
       coin: 150,
     },
   ];
+
   useEffect(() => {
     if (user !== undefined) {
       console.log(user);
     }
   }, [user]);
-  function handleClick() {
+  const handleClick = () => {
     const course = courses.filter((course) => {
       return course.id === checked;
     });
-
     setUser({
       userName: userName,
       password: password,
-      radio: course,
+      radio: course[0].name,
       checkbox: checkbox,
     });
-  }
-  function handleCheck(id) {
-    setCheckbox((prev) => [...prev, id]);
-  }
+  };
+  const handleChange = (id) => {
+    setCheckbox((prev) => {
+      const isChecked = checkbox.includes(id);
+      if (isChecked) {
+        return checkbox.filter((item) => {
+          return item !== id;
+        });
+      }
+      return [...prev, id];
+    });
+  };
   return (
     <div>
-      <form action="">
+      <form
+        action=""
+        style={{ display: "flex", flexDirection: "column", width: "40%" }}
+      >
         <label htmlFor="userName">User name or email</label>
         <input
           type="text"
@@ -56,47 +67,47 @@ function App() {
             setUserName(e.target.value);
           }}
         />
-        <label htmlFor="password">password</label>
+        <label htmlFor="password">Password</label>
         <input
-          required
           type="password"
+          id="password"
           value={password}
           onChange={(e) => {
             setPassword(e.target.value);
           }}
-          id="password"
         />
-        <label htmlFor="">Choose course</label>
-        {courses.map((course, index) => (
-          <div key={index}>
-            <input
-              checked={checked === course.id}
-              onChange={() => {
-                setChecked(course.id);
-              }}
-              type="radio"
-            />
-            {course.name}
-          </div>
-        ))}
-        <label htmlFor="">Choose course</label>
-        {courses.map((course, index) => (
-          <div key={index}>
-            <input
-              checked={checkbox.includes(course.id)}
-              onChange={() => handleCheck(course.id)}
-              type="checkbox"
-            />
-            {course.name}
-          </div>
-        ))}
-        <button
-          type="button"
-          onClick={() => {
-            handleClick();
-          }}
-        >
-          Click
+        <label>Choose a Course</label>
+        {courses.map((course, index) => {
+          return (
+            <div key={index}>
+              <input
+                type="radio"
+                checked={checked === course.id}
+                onChange={() => {
+                  setChecked(course.id);
+                }}
+              />
+              {course.name}
+            </div>
+          );
+        })}
+        <label>Choose some Course</label>
+        {courses.map((course, index) => {
+          return (
+            <div key={index}>
+              <input
+                type="checkbox"
+                checked={checkbox.includes(course.id)}
+                onChange={() => {
+                  handleChange(course.id);
+                }}
+              />
+              {course.name}
+            </div>
+          );
+        })}
+        <button type="button" onClick={handleClick}>
+          Register
         </button>
       </form>
     </div>
